@@ -93,7 +93,6 @@ function main(params) {
       //'debug': 'all',
       'metadata.broker.list': params.kafka_brokers_sasl,
       'security.protocol': 'sasl_ssl',
-      // 'ssl.ca.location': opts.calocation,
       'sasl.mechanisms': 'PLAIN',
       'sasl.username': 'token',
       'sasl.password': params.api_key,

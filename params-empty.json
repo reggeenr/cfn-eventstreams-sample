@@ -1,0 +1,4 @@
+{
+  "kafka_brokers_sasl": "<Array of strings>",
+  "api_key": "<your API key to connect to Event Streams>"
+}

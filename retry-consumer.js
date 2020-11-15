@@ -1,5 +1,5 @@
 const Kafka = require('node-rdkafka');
-const crypto = require('crypto');
+const openwhisk = require('openwhisk');
 
 function main(params) {
   const fn = 'main ';
@@ -18,7 +18,6 @@ function main(params) {
       //'debug': 'all',
       'metadata.broker.list': params.kafka_brokers_sasl,
       'security.protocol': 'sasl_ssl',
-      // 'ssl.ca.location': opts.calocation,
       'sasl.mechanisms': 'PLAIN',
       'sasl.username': 'token',
       'sasl.password': params.api_key,
@@ -59,8 +58,28 @@ function main(params) {
 
       if (messageKey && messageKey === `${m.key}`) {
         console.log(`Found message ${m.key} by key ${messageKey}: ${JSON.stringify(m)}`);
-        resolve(m);
-        return;
+
+        // stringify key and and convert the value to a proper JSON
+        const retryMessage = m;
+        retryMessage.key = `${m.key}`;
+        retryMessage.value = JSON.parse(`${m.value}`);
+
+        // utilize OpenWhisk SDK to trigger the message process again
+        ow = openwhisk();
+        const actionName = 'cfn-eventstreams-sample/process-message';
+        const blocking = false;
+        const actionParams = { messages: [retryMessage] };
+        ow.actions.invoke({ name: actionName, blocking, params: actionParams }).then((result => {
+          console.log(`invoked action details: ${JSON.stringify(result)}`);
+          console.log(`${fn}< Message '${messageKey}' will be processed again`);
+          resolve(result);
+          return;
+        }))
+        .catch((err) => {
+          console.error(err);
+          reject({ result: `message '${messageKey}' found but failed to invoke '${actionName}'!` });
+        });
+        
       }
     });
 
