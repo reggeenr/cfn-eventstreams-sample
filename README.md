@@ -8,7 +8,7 @@
 
 * Copy the file `params-empty.json` to `params.json` and replace its content with the service credentials JSON
 
-* Use the script `./buildAndPush.sh <your-dockerhub-namespace>/cfn-kafka-runtime-node`
+* Use the script `./buildAndPush.sh <your-dockerhub-namespace>/cfn-kafka-runtime-node` to build and push an adjusted runtime image to DockerHub
 
 ### Cloud Functions Setup
 
@@ -42,4 +42,4 @@ ibmcloud fn action update cfn-eventstreams-sample/retry-consumer retry-consumer.
 
 * Open the browser or use cURL to produce new messages: `https://us-south.functions.appdomain.cloud/api/v1/web/<iam-namespace-id>/cfn-eventstreams-sample/producer.json?name=foo&color=bar`
 
-* Use the second URL to re-consume already committed actions `https://us-south.functions.appdomain.cloud/api/v1/web/<iam-namespace-id>/cfn-eventstreams-sample/retry-consumer.json?key=KeyKJ7DG`
+* Use the second URL to re-consume already committed messages `https://us-south.functions.appdomain.cloud/api/v1/web/<iam-namespace-id>/cfn-eventstreams-sample/retry-consumer.json?key=KeyKJ7DG`

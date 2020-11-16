@@ -46,6 +46,7 @@ function main(params) {
     consumer.on('ready', function (arg) {
       console.log('consumer ready.' + JSON.stringify(arg));
 
+      // see https://blizzard.github.io/node-rdkafka/current/KafkaConsumer.html
       consumer.assign([{ topic: topicName, partition: partition, offset: offset }]);
 
       // start consuming messages
